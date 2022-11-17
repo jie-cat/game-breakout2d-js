@@ -27,15 +27,42 @@
       //  球座標
       let x = canvas.width / 2; //280
       let y = canvas.height - 30; //290
+
+      let dx = 2;
+      let dy = -2;
+      const ballRadius = 10;
+
       //  拍板座標
       let paddleWidth = 75;
       let paddleHeight = 10;
       let paddleX = (canvas.width - paddleWidth) / 2;
       let paddleY = canvas.height - paddleHeight;
+      // 設計拍板移動
+      // keyboard 按下去是false 彈上來是true
+      let leftPressed = false; //左
+      let rightPressed = false; //右
 
-      let dx = 2;
-      let dy = -2;
-      const ballRadius = 10;
+      document.addEventListener("keydown", keyDownHandler);
+
+      function keyDownHandler(e) {
+        if (e.keyCode == "37") {
+          leftPressed = true;
+        }
+        if (e.keyCode == "39") {
+          rightPressed = true;
+        }
+      }
+
+      document.addEventListener("keyup", keyUpHandler);
+
+      function keyUpHandler(e) {
+        if (e.keyCode == "37") {
+          leftPressed = false;
+        }
+        if (e.keyCode == "39") {
+          rightPressed = false;
+        }
+      }
 
       // 畫圓
       function drawBall() {
@@ -57,6 +84,7 @@
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); //清除圖紙內的內容
+        // 畫球
         drawBall();
         x += dx; //改變座標數值做為下一次畫圓新座標
         y += dy;
@@ -66,6 +94,14 @@
         }
         if (x + ballRadius > canvas.width || x - ballRadius < 0) {
           dx = -dx;
+        }
+        // 畫拍板
+        drawPaddle();
+        if (leftPressed == true && paddleX > 0) {
+          paddleX -= 5;
+        }
+        if (rightPressed == true && paddleX + paddleWidth < canvas.width) {
+          paddleX += 5;
         }
       }
       setInterval(draw, 10);
