@@ -33,22 +33,50 @@
       let brickOffsetTop = 30;
       let brickOffsetLeft = 30;
 
-      let draws = []; //放每個磚塊起始點座標
+      let bricks = []; //紀錄每個磚塊起始點座標 { x:x位置 , y:y位置 } -> 為了後續寫撞擊判斷位置
+      //先初始化資料,讓下面更新
+      for (c = 0; c < brickColumnCount; c++) {
+        bricks[c] = []; // [ [] , [] , [] ] -> Array裡面每個元素都放Array
+        for (r = 0; r < brickRowCount; r++) {
+          bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+      }
 
       // 畫磚塊
       function drawBricks() {
         for (let c = 0; c < brickColumnCount; c++) {
-          draws[c] = []; // [ [] , [] , [] ] -> Array裡面每個元素都放Array
           for (let r = 0; r < brickRowCount; r++) {
-            let brickX = brickOffsetLeft + c * (brickWidth + brickPadding);
-            let brickY = brickOffsetTop + r * (brickHeight + brickPadding);
-            draws[c][r] = { x: brickX, y: brickY }; //裝每個磚塊繪圖起始點座標物件 [ [{x:brckX,y:brickY}] , [{...}] , [{...}]]
-            // 畫每塊磚塊
-            ctx.beginPath();
-            ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "purple";
-            ctx.fill();
-            ctx.closePath();
+            if (bricks[c][r].status == 1) {
+              let brickX = brickOffsetLeft + c * (brickWidth + brickPadding);
+              let brickY = brickOffsetTop + r * (brickHeight + brickPadding);
+              bricks[c][r] = { x: brickX, y: brickY, status: 1 }; //裝每個磚塊繪圖起始點座標物件 [ [{x:brckX,y:brickY}] , [{...}] , [{...}]]
+              // 畫每塊磚塊
+              ctx.beginPath();
+              ctx.rect(brickX, brickY, brickWidth, brickHeight);
+              ctx.fillStyle = "purple";
+              ctx.fill();
+              ctx.closePath();
+            }
+          }
+        }
+      }
+
+      // 每次繪圖跑迴圈檢查球座標位置有沒有撞到磚塊;
+      function collisionDetection() {
+        for (let c = 0; c < brickColumnCount; c++) {
+          for (let r = 0; r < brickRowCount; r++) {
+            let b = bricks[c][r]; //每個磚塊繪圖起始點座標 -> 從第一行第一列開始代入
+            if (b.status == 1) {
+              if (
+                x > b.x &&
+                x < b.x + brickWidth &&
+                y > b.y &&
+                y < b.y + brickHeight
+              ) {
+                dy = -dy; //反彈
+                bricks[c][r].status = 0;
+              }
+            }
           }
         }
       }
@@ -113,6 +141,9 @@
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); //清除圖紙內的內容
+        // 球和磚塊接觸
+        collisionDetection();
+
         // 畫磚塊
         drawBricks();
         // 畫球
@@ -146,7 +177,7 @@
         }
       }
 
-      const interval = setInterval(draw, 10);
+      const interval = setInterval(draw, 20);
     </script>
   </body>
 </html>
