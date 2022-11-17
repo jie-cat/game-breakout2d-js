@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      canvas {
+        background: #eee;
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="480" height="320"> </canvas>
+
+    <script>
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d"); //建立2d圖紙
+
+      //  球座標
+      let x = canvas.width / 2; //280
+      let y = canvas.height - 30; //290
+      //  拍板座標
+      let paddleWidth = 75;
+      let paddleHeight = 10;
+      let paddleX = (canvas.width - paddleWidth) / 2;
+      let paddleY = canvas.height - paddleHeight;
+
+      let dx = 2;
+      let dy = -2;
+      const ballRadius = 10;
+
+      // 畫圓
+      function drawBall() {
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI * 2, false);
+        ctx.fillStyle = "green";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      // 畫方形 拍板
+      function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); //清除圖紙內的內容
+        drawBall();
+        x += dx; //改變座標數值做為下一次畫圓新座標
+        y += dy;
+        // 撞到上邊界或下邊界就換邊跑
+        if (y - ballRadius < 0 || y + ballRadius > canvas.height) {
+          dy = -dy;
+        }
+        if (x + ballRadius > canvas.width || x - ballRadius < 0) {
+          dx = -dx;
+        }
+      }
+      setInterval(draw, 10);
+    </script>
+  </body>
+</html>
