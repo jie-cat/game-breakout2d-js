@@ -88,10 +88,19 @@
         drawBall();
         x += dx; //改變座標數值做為下一次畫圓新座標
         y += dy;
+
         // 撞到上邊界或下邊界就換邊跑
-        if (y - ballRadius < 0 || y + ballRadius > canvas.height) {
+        if (y - ballRadius < 0) {
           dy = -dy;
+        } else if (y + ballRadius > canvas.height) {
+          if (x > paddleX && x < paddleX + paddleWidth) {
+            dy = -dy;
+          } else {
+            alert("GAME OVER!");
+            document.location.reload(); //頁面重新載入
+          }
         }
+
         if (x + ballRadius > canvas.width || x - ballRadius < 0) {
           dx = -dx;
         }
@@ -104,7 +113,8 @@
           paddleX += 5;
         }
       }
-      setInterval(draw, 10);
+
+      const interval = setInterval(draw, 10);
     </script>
   </body>
 </html>
