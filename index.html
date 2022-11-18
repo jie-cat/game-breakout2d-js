@@ -24,6 +24,15 @@
       const canvas = document.getElementById("myCanvas");
       const ctx = canvas.getContext("2d"); //建立2d圖紙
 
+      // 增加生命值
+      let lives = 3;
+
+      function drawLives() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "blue";
+        ctx.fillText("Live: " + lives, canvas.width - 80, 20);
+      }
+
       // 滑鼠控制拍桿
       document.addEventListener("mousemove", mouseMoveHandler);
 
@@ -45,7 +54,7 @@
       }
 
       // 磚塊設定
-      let brickRowCount = 3;
+      let brickRowCount = 5;
       let brickColumnCount = 5;
       let brickWidth = 75;
       let brickHeight = 20;
@@ -167,6 +176,9 @@
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); //清除圖紙內的內容
+        // 畫生命值
+        drawLives();
+
         // 球和磚塊接觸
         collisionDetection();
 
@@ -187,9 +199,20 @@
           if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
           } else {
-            alert("GAME OVER!");
-            y = 0;
-            document.location.reload(); //頁面重新載入
+            lives--;
+            // 增加生命值判斷
+            if (lives > 0) {
+              // 重置球位置
+              x = canvas.width / 2; //280
+              y = canvas.height - 30; //290
+              dx = 2;
+              dy = -2;
+              // 重置拍板位置
+              paddleX = (canvas.width - paddleWidth) / 2;
+            } else {
+              alert("GAME OVER!");
+              document.location.reload(); //頁面重新載入
+            }
           }
         }
 
@@ -204,9 +227,11 @@
         if (rightPressed == true && paddleX + paddleWidth < canvas.width) {
           paddleX += 5;
         }
+
+        requestAnimationFrame(draw); //瀏覽器控制重複執行渲染畫圖
       }
 
-      const interval = setInterval(draw, 20);
+      draw();
     </script>
   </body>
 </html>
