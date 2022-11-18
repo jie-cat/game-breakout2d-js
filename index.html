@@ -10,15 +10,17 @@
         padding: 0;
         margin: 0;
       }
+      body {
+        background-image: url("https://cdn.pixabay.com/photo/2020/07/06/01/33/forest-5375005_1280.jpg");
+      }
       canvas {
-        background: #eee;
         display: block;
         margin: 0 auto;
       }
     </style>
   </head>
   <body>
-    <canvas id="myCanvas" width="480" height="320"> </canvas>
+    <canvas id="myCanvas" width="480" height="520"></canvas>
 
     <script>
       const canvas = document.getElementById("myCanvas");
@@ -28,9 +30,9 @@
       let lives = 3;
 
       function drawLives() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "blue";
-        ctx.fillText("Live: " + lives, canvas.width - 80, 20);
+        ctx.font = "bold 20px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("❤︎: " + lives, canvas.width - 80, 20);
       }
 
       // 滑鼠控制拍桿
@@ -49,12 +51,12 @@
       // 繪製分數文字
       function drawScore() {
         ctx.font = "16px Arial";
-        ctx.fillStyle = "red";
-        ctx.fillText("Score: " + score, 8, 20);
+        ctx.fillStyle = "#66fcf1";
+        ctx.fillText("💣: " + score, 8, 20);
       }
 
       // 磚塊設定
-      let brickRowCount = 5;
+      let brickRowCount = 10;
       let brickColumnCount = 5;
       let brickWidth = 75;
       let brickHeight = 20;
@@ -83,7 +85,7 @@
               // 畫每塊磚塊
               ctx.beginPath();
               ctx.rect(brickX, brickY, brickWidth, brickHeight);
-              ctx.fillStyle = "purple";
+              ctx.fillStyle = "#66fcf1";
               ctx.fill();
               ctx.closePath();
             }
@@ -160,7 +162,7 @@
       function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2, false);
-        ctx.fillStyle = "green";
+        ctx.fillStyle = "#de9e1d";
         ctx.fill();
         ctx.closePath();
       }
@@ -168,14 +170,19 @@
       // 畫方形 拍板
       function drawPaddle() {
         ctx.beginPath();
-        ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "#c924f2";
+        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
         ctx.fill();
         ctx.closePath();
       }
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); //清除圖紙內的內容
+
+        // 畫背景
+        ctx.fillStyle = "#1f2833";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         // 畫生命值
         drawLives();
 
